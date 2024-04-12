@@ -8,7 +8,7 @@ else
     LAT_V="${TERRARIA_SRV_V//./}"
 fi
 
-function download-terraria-server = {
+function download-terraria-server {
     cd ${SERVER_DIR}
    	if wget -q -nc --show-progress --progress=bar:force:noscroll -O terraria-server-$LAT_V.zip "https://terraria.org/api/download/pc-dedicated-server/terraria-server-${LAT_V}.zip" ; then
 		    echo "---Successfully downloaded Terraria---"
