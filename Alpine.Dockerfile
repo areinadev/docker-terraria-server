@@ -1,20 +1,14 @@
-FROM ich777/debian-baseimage
+FROM alpine:3
 
 LABEL org.opencontainers.image.authors="admin@minenet.at"
 LABEL org.opencontainers.image.source="https://github.com/ich777/docker-terraria-server"
 
 ARG TARGETPLATFORM
 
-RUN apt-get update && \
-	apt-get -y install --no-install-recommends screen unzip curl && \
+RUN apk add --no-cache screen unzip curl && \
 	if [ "$TARGETPLATFORM" == "linux/arm64" ]; then \
-	  apt-get -y install --no-install-recommends dirmngr ca-certificates gnupg \
-    sudo gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-    echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-buster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-    sudo apt update
-	  apt-get -y install --no-install-recommends mono-complete \
-	fi && \
-	rm -rf /var/lib/apt/lists/*
+	  apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+	fi
 
 RUN wget -O /tmp/gotty.tar.gz https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz && \
 	tar -C /usr/bin/ -xvf /tmp/gotty.tar.gz && \
