@@ -24,15 +24,17 @@ chmod -R 750 /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
-	su $USER -c "screen -S Terraria -X stuff 'exit^M'" >/dev/null
-	tail --pid="$killpid" -f 2>/dev/null
-	exit 143
+    echo "---Stopping server gracefully---"
+    su $USER -c "screen -S Terraria -X stuff 'exit^M'" >/dev/null
+    tail --pid="$killpid" -f 2>/dev/null
+    exit 143
 }
 
 su ${USER} -c "/opt/scripts/start-server.sh" &
 killpid="$!"
 
 trap 'term_handler' SIGTERM
+trap 'ec=$?; echo "---Server Stopped---"; exit $ec' EXIT
 
 wait $killpid
 exit 0
