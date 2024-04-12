@@ -26,7 +26,7 @@ function download-terraria-server = {
 rm -rf ${SERVER_DIR}/terraria-server-*.zip
 
 echo "---Version Check---"
-if [ ! -d "${SERVER_DIR}/lib" ]; then
+if [ ! -d "${SERVER_DIR}/lib" ] && [ ! -d "${SERVER_DIR}/lib64" ]''; then
    	echo "---Terraria not found, downloading!---"
    	download-terraria-server
 elif [ "$LAT_V" != "$CUR_V" ]; then
@@ -34,7 +34,7 @@ elif [ "$LAT_V" != "$CUR_V" ]; then
     download-terraria-server
 elif [ "$LAT_V" == "$CUR_V" ]; then
     echo "---Terraria Server v$LAT_V up-to-date---"
-	  echo "---If you want to change the version add a Variable with the Key: 'TERRARIA_SRV_V' and the Value eg: '1.4.2.3'."
+	  echo "---If you want to change the version disable autoupdate and add a variable with the key: 'TERRARIA_SRV_V' and the value eg: '1.4.2.3'."
 else
  	  echo "---Something went wrong, putting server in sleep mode---"
  	  sleep infinity
