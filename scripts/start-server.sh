@@ -61,7 +61,6 @@ screen -wipe 2&>/dev/null
 cd ${SERVER_DIR}
 screen -S Terraria -L -Logfile ${SERVER_DIR}/masterLog.0 -d -m ${SERVER_DIR}/TerrariaServer.bin.x86_64 ${GAME_PARAMS}
 sleep 2
-echo "---Server Ready---"
 
 if [ "${ENABLE_WEBCONSOLE}" == "true" ]; then
     /opt/scripts/start-gotty.sh 2>/dev/null &
