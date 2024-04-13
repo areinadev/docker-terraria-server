@@ -21,12 +21,19 @@ function download-terraria-server {
     unzip -qo ${SERVER_DIR}/terraria-server-$LAT_V.zip
     cp -R -f ${SERVER_DIR}/$LAT_V/Linux/* ${SERVER_DIR}/
     rm -R ${SERVER_DIR}/terraria-server-$LAT_V.zip ${SERVER_DIR}/${LAT_V}
+
+    if [ "$(uname -m)" == "aarch64" ]; then
+	rm -f System*
+	rm -f Mono*
+	rm -f monoconfig
+	rm -f mscorlib.dll
+    fi
 }
 
 rm -rf ${SERVER_DIR}/terraria-server-*.zip
 
 echo "---Version Check---"
-if [ ! -d "${SERVER_DIR}/lib" ] && [ ! -d "${SERVER_DIR}/lib64" ]''; then
+if [ ! -d "${SERVER_DIR}/lib" ] && [ ! -d "${SERVER_DIR}/lib64" ]; then
    	echo "---Terraria not found, downloading!---"
    	download-terraria-server
 elif [ "$LAT_V" != "$CUR_V" ]; then
@@ -59,13 +66,21 @@ screen -wipe 2&>/dev/null
 
 #---Start Server---
 cd ${SERVER_DIR}
-screen -S Terraria -L -Logfile ${SERVER_DIR}/masterLog.0 -d -m ${SERVER_DIR}/TerrariaServer.bin.x86_64 ${GAME_PARAMS}
+
+SCREEN_EXEC="screen -S Terraria -L -Logfile ${SERVER_DIR}/masterLog.0 -d -m"
+
+if [ "$(uname -m)" == "aarch64" ]; then
+    ${SCREEN_EXEC} mono --server --gc=sgen -O=all ${SERVER_DIR}/TerrariaServer.exe ${GAME_PARAMS}
+else
+    ${SCREEN_EXEC} ${SERVER_DIR}/TerrariaServer.bin.x86_64 ${GAME_PARAMS}
+fi
+
 sleep 2
+
+killpid="$(pgrep 'screen')"
 
 if [ "${ENABLE_WEBCONSOLE}" == "true" ]; then
     /opt/scripts/start-gotty.sh 2>/dev/null &
 fi
-
-killpid="$(pidof TerrariaServer.bin.x86_64)"
 
 tail --pid=$killpid -f ${SERVER_DIR}/masterLog.0
