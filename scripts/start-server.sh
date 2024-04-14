@@ -17,16 +17,17 @@ function download-terraria-server {
 		    echo "------------Can't download Terraria, putting server into sleep mode-----------"
 		    echo "------------------------------------------------------------------------------"
 		    sleep infinity
+
 	  fi
     unzip -qo ${SERVER_DIR}/terraria-server-$LAT_V.zip
     cp -R -f ${SERVER_DIR}/$LAT_V/Linux/* ${SERVER_DIR}/
     rm -R ${SERVER_DIR}/terraria-server-$LAT_V.zip ${SERVER_DIR}/${LAT_V}
 
     if [ "$(uname -m)" == "aarch64" ]; then
-	rm -f System*
-	rm -f Mono*
-	rm -f monoconfig
-	rm -f mscorlib.dll
+        rm -f System*
+        rm -f Mono*
+        rm -f monoconfig
+        rm -f mscorlib.dll
     fi
 }
 

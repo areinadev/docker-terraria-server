@@ -3,14 +3,14 @@ FROM alpine:3
 LABEL org.opencontainers.image.authors="admin@minenet.at"
 LABEL org.opencontainers.image.source="https://github.com/ich777/docker-terraria-server"
 
-ARG TARGETPLATFORM
+ARG TARGETARCH
 
-RUN apk add --no-cache screen unzip curl && \
-	if [ "$TARGETPLATFORM" == "linux/arm64" ]; then \
-	  apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+RUN apk add --no-cache screen unzip curl wget coreutils bash procps shadow && \
+	if [ "$TARGETARCH" = "arm64" ]; then \
+	  apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing; \
 	fi
 
-RUN wget -O /tmp/gotty.tar.gz https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz && \
+RUN curl -sL -o /tmp/gotty.tar.gz https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz && \
 	tar -C /usr/bin/ -xvf /tmp/gotty.tar.gz && \
 	rm -rf /tmp/gotty.tar.gz
 
@@ -31,7 +31,7 @@ ENV USER="terraria"
 
 RUN mkdir $DATA_DIR && \
 	mkdir $SERVER_DIR && \
-	useradd -d $DATA_DIR -s /bin/bash $USER && \
+	adduser -D -h $DATA_DIR -s /bin/bash $USER && \
 	chown -R $USER $DATA_DIR && \
 	ulimit -n 2048
 
