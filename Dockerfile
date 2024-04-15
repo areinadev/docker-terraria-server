@@ -35,8 +35,7 @@ RUN curl -sL -o /tmp/gotty.tar.gz https://github.com/yudai/gotty/releases/downlo
 	tar -C /usr/bin/ -xvf /tmp/gotty.tar.gz && \
 	rm -rf /tmp/gotty.tar.gz
 
-ENV DATA_DIR="/serverdata"
-ENV SERVER_DIR="${DATA_DIR}/serverfiles"
+ENV SERVER_DIR="/server"
 ENV GAME_VERSION="template"
 ENV GAME_MOD="template"
 ENV GAME_PARAMS="-config serverconfig.txt"
@@ -44,21 +43,18 @@ ENV TERRARIA_SRV_V="1.4.4.9"
 ENV ENABLE_AUTOUPDATE="true"
 ENV ENABLE_WEBCONSOLE="true"
 ENV GOTTY_PARAMS="-w --title-format Terraria"
-ENV UMASK=000
-ENV UID=99
-ENV GID=100
-ENV DATA_PERM=770
 ENV USER="terraria"
 
-RUN mkdir $DATA_DIR && \
-	mkdir $SERVER_DIR && \
-	useradd -d $DATA_DIR -s /bin/bash $USER && \
-	chown -R $USER $DATA_DIR && \
+RUN mkdir $SERVER_DIR && \
+	useradd -U -r $USER && \
+	chown -R $USER:$USER $SERVER_DIR && \
 	ulimit -n 2048
 
-ADD /scripts/ /opt/scripts/
-ADD /config/ /config/
-RUN chmod -R 777 /opt/scripts/
+COPY --chmod 111 /scripts/ /opt/scripts/
+COPY --chmod 666 /config/ /config/
 
-#Server Start
+VOLUME $SERVER_DIR
+
+USER $USER
+
 ENTRYPOINT ["/opt/scripts/start.sh"]

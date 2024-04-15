@@ -1,5 +1,5 @@
 #!/bin/bash
-CUR_V="$(grep "Version" /serverdata/serverfiles/changelog.txt 2>/dev/null | head -1 | cut -d ' ' -f 2)"
+CUR_V="$(grep "Version" ${SERVER_DIR}/changelog.txt 2>/dev/null | head -1 | cut -d ' ' -f 2)"
 CUR_V="${CUR_V//./}"
 
 if [ "${ENABLE_AUTOUPDATE}" == "true" ]; then
@@ -58,8 +58,6 @@ if [ ! -f "${SERVER_DIR}/serverconfig.txt" ]; then
     echo "---No serverconfig.txt found, copying default...---"
     cp -f /config/serverconfig.txt ${SERVER_DIR}
 fi
-
-chmod -R ${DATA_PERM} ${DATA_DIR}
 
 #---Checking for old logs---
 find ${SERVER_DIR} -name "masterLog.*" -exec rm -f {} \;
