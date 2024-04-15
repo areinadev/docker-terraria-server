@@ -49,10 +49,6 @@ else
 fi
 
 echo "---Starting Server---"
-if [ ! -f ~/.screenrc ]; then
-    echo "defscrollback 30000
-bindkey \"^C\" echo 'Blocked. Please use command \"exit\" to shutdown the server or close this window to exit the terminal.'" > ~/.screenrc
-fi
 
 if [ ! -f "${SERVER_DIR}/serverconfig.txt" ]; then
     echo "---No serverconfig.txt found, copying default...---"
@@ -66,7 +62,7 @@ screen -wipe 2&>/dev/null
 #---Start Server---
 cd ${SERVER_DIR}
 
-SCREEN_EXEC="screen -S Terraria -L -Logfile ${SERVER_DIR}/masterLog.0 -d -m"
+SCREEN_EXEC="screen -S Terraria -L -Logfile ${SERVER_DIR}/masterLog.0 -c /config/.screenrc -d -m"
 
 if [ "$(uname -m)" == "aarch64" ]; then
     ${SCREEN_EXEC} mono --server --gc=sgen -O=all ${SERVER_DIR}/TerrariaServer.exe ${GAME_PARAMS}

@@ -1,0 +1,2 @@
+defscrollback 30000
+bindkey \"^C\" echo 'Blocked. Please use command \"exit\" to shutdown the server or close this window to exit the terminal.'

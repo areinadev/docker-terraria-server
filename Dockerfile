@@ -50,8 +50,8 @@ RUN mkdir $SERVER_DIR && \
 	chown -R $USER:$USER $SERVER_DIR && \
 	ulimit -n 2048
 
-COPY --chmod 111 /scripts/ /opt/scripts/
-COPY --chmod 666 /config/ /config/
+COPY --chmod=555 /scripts/ /opt/scripts/
+COPY --chmod=666 /config/ /config/
 
 VOLUME $SERVER_DIR
 
